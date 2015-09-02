@@ -21,15 +21,15 @@ addons:
     - libspatialindex1
 
 python:
-  - 2.6
-  - 2.7
-  - 3.3
+  # - 2.6
+  # - 2.7
+  # - 3.3
   - 3.4
 
 env:
-  - PANDAS_VERSION=v0.15.2
+  # - PANDAS_VERSION=v0.15.2
   - PANDAS_VERSION=v0.16.2
-  - PANDAS_VERSION=master
+  # - PANDAS_VERSION=master
 
 before_install:
   - pip install -U pip
