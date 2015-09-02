@@ -1,5 +1,25 @@
 language: python
 
+sudo: false
+
+cache:
+  directories:
+    - ~/.cache/pip
+
+env:
+  global:
+    - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
+    - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
+
+addons:
+  apt:
+    packages:
+    - libgdal1h
+    - gdal-bin
+    - libgdal-dev
+    - libspatialindex-dev
+    - libspatialindex1
+
 python:
   - 2.6
   - 2.7
@@ -12,21 +32,22 @@ env:
   - PANDAS_VERSION=master
 
 before_install:
-  - sudo add-apt-repository -y ppa:ubuntugis/ppa
-  - sudo apt-get update
-  - sudo apt-get install libgdal1h gdal-bin libgdal-dev libspatialindex-dev libspatialindex1
-#  - sudo -u postgres psql -c "drop database if exists test_geopandas"
-#  - sudo -u postgres psql -c "create database test_geopandas"
-#  - sudo -u postgres psql -c "create extension postgis" -d test_geopandas
+  - pip install -U pip
+  - pip install wheel
 
 install:
-  - pip install -r requirements.txt --use-mirrors
-  - pip install -r requirements.test.txt --use-mirrors
-  - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install -r .requirements-2.6.txt --use-mirrors; fi
+  - pip wheel -r requirements.txt
+  - pip wheel -r requirements.test.txt
+  - pip wheel numpy
+  - pip install numpy
+  - pip install -r requirements.txt
+  - pip install -r requirements.test.txt
+  - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install -r .requirements-2.6.txt; fi
   - git clone git://github.com/pydata/pandas.git
   - cd pandas
   - git checkout $PANDAS_VERSION
-  - python setup.py install
+  - pip wheel -e .
+  - pip install -e .
   - cd ..
 
 script:
