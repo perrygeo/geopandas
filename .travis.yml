@@ -18,7 +18,6 @@ addons:
     - gdal-bin
     - libgdal-dev
     - libspatialindex-dev
-    - libspatialindex1
 
 python:
   # - 2.6
