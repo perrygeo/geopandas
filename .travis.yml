@@ -21,10 +21,11 @@ python:
   - 3.4
 
 env:
-  # - PANDAS_VERSION=v0.15.2
-  # - PANDAS_VERSION=master
+  matrix:
+    # - PANDAS_VERSION=v0.15.2
+    - PANDAS_VERSION=master
+    - PANDAS_VERSION=0.16.2
   global:
-    - PANDAS_VERSION=v0.16.2
     - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
     - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
 
@@ -43,11 +44,7 @@ install:
 
   - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install -r .requirements-2.6.txt; fi
 
-  - git clone git://github.com/pydata/pandas.git
-  - cd pandas
-  - git checkout $PANDAS_VERSION
-  - pip install -e .
-  - cd ..
+  - if [[ $PANDAS_VERSION == 'master' ]]; then git clone git://github.com/pydata/pandas.git; cd pandas; pip install -e .; cd ..  ; else pip wheel pandas==$PANDAS_VERSION; pip install pandas==$PANDAS_VERSION; fi
 
 script:
   - py.test tests --cov geopandas -v --cov-report term-missing
